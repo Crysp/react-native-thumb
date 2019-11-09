@@ -18,17 +18,17 @@ RCT_EXPORT_MODULE()
         filepath = [filepath stringByReplacingOccurrencesOfString:@"file://"
                                                   withString:@""];
         NSURL *vidURL = [NSURL fileURLWithPath:filepath];
-        
+
         AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:vidURL options:nil];
         AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
         generator.appliesPreferredTrackTransform = YES;
-        
+
         NSError *err = NULL;
         CMTime time = CMTimeMake(1, 60);
-        
+
         CGImageRef imgRef = [generator copyCGImageAtTime:time actualTime:NULL error:&err];
         UIImage *image = [UIImage imageWithCGImage:imgRef];
-        
+
         float oldHeight = image.size.height;
         float scaleFactor = size / oldHeight;
 
@@ -38,12 +38,12 @@ RCT_EXPORT_MODULE()
         [image drawInRect:CGRectMake(0, 0, newWidth, newHeight)];
         UIImage *thumbnail = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
-        
+
         // save to temp directory
         NSString* tempDirectory = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory,
                                                                        NSUserDomainMask,
                                                                        YES) lastObject];
-        
+
         NSData *data = UIImageJPEGRepresentation(thumbnail, 1.0);
         NSFileManager *fileManager = [NSFileManager defaultManager];
         NSString *fullPath = [tempDirectory stringByAppendingPathComponent: [NSString stringWithFormat:@"thumb-%@.jpg", [[NSProcessInfo processInfo] globallyUniqueString]]];
@@ -58,8 +58,8 @@ RCT_EXPORT_MODULE()
 }
 
 RCT_EXPORT_METHOD(get:(NSString *)filepath size:(float)size resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
-    [RNThumbnail get:(NSString *)filepath size:size resolve:resolve reject:reject];
+    [RNThumb get:(NSString *)filepath size:size resolve:resolve reject:reject];
 }
 
 @end
-  
+
